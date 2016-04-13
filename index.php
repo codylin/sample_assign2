@@ -5,15 +5,20 @@
   $ins = new myModel();
  */
 
-$series = 'http://botcards.jlparry.com/data/series';
-$certificates = 'http://botcards.jlparry.com/data/certificates';
-$transactions = 'http://botcards.jlparry.com/data/transactions';
-$series_data = _retrieve_data($series);
+//$series = 'http://botcards.jlparry.com/data/series';
+//$certificates = 'http://botcards.jlparry.com/data/certificates';
+//$transactions = 'http://botcards.jlparry.com/data/transactions';
+$state = 'http://botcards.jlparry.com/status';
+//$series_data = _retrieve_data($series);
 //print_r($series_data);
-$certificates_data = _retrieve_data($certificates);
+//$certificates_data = _retrieve_data($certificates);
 //                 print_r($certificates_data);
-$transactions_data = _retrieve_data($transactions);
-print_r(get_all_bot_names($series_data));
+//$transactions_data = _retrieve_data($transactions);
+$file = file_get_contents($state);
+$xml = simplexml_load_string($file);
+$round = (string) $xml->round;
+echo $round;
+
 
 function get_all_bot_names($array) {
     $_arr;
@@ -93,6 +98,18 @@ function get_data($url) {
     $data = curl_exec($ch);
     curl_close($ch);
     return $data;
+}
+
+function download_page($path){
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL,$path);
+	curl_setopt($ch, CURLOPT_FAILONERROR,1);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+	curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+	$retValue = curl_exec($ch);			 
+	curl_close($ch);
+	return $retValue;
 }
 ?>
 
